@@ -1,4 +1,4 @@
-前言
+#前言
 一个python项目快速开发完以后，常常针对瓶颈进行优化，其中一种方式就是对于性能至关重要的部分，使用C重写，这已经是一种最佳实践。如果整个项目完全使用C，开发效率就没有保障。python运行环境(CPython)是用C开发的，因此python与C结合起来很容易，而且方式多种多样。使用C重写了关键部分后，需要在python中调用，本文介绍四种最常用的调用C函数的方式，分别是c extension，Cython，ctypes和SWIG。举个例子，假设我们用C重写了add函数，它接受两个整数，计算他们的和并返回。
 int myadd(int a, int b)
 {
@@ -6,7 +6,7 @@ return a + b;
 }
 那么我们通过c extension，Cython，ctypes和SWIG四种方法可以在python中调用这个c语言写的add函数，不同方法各有优劣。
 
-C extension
+#C extension
 C extension又称python-C-API，其python端基本不动，改变c端代码，需要再写接驳函数，这是最原始也是最底层的扩展python的方式。
 demo_module.c：
 在文件第一行包含python调用扩展的头文件
@@ -129,7 +129,7 @@ for i in range(10000000):
 r = fast_add(i, i)
 print(time()-s)
 
-Ctypes
+#Ctypes
 Ctypes类似于Cython，主要作用就是在python中调用C动态链接库（shared library）中的函数。它提供C兼容的数据类型，并允许在DLL或共享库中调用函数，它可以用来将这些库封装在纯Python中。
 
 libadd.c：
@@ -149,7 +149,7 @@ s=time()
 for i in range(10000000):
 r = mylib.add(i, i)
 print(time()-s)
-SWIG
+#SWIG
 SWIG的目的就是要为C/C++ API提供脚本语言的接口，SWIG所有做的就是解决脚本语言和C/C++交互的问题，SWIG所做的事情其实就是两件事：
 
 根据要调用的C API生成Wrapper函数，作为胶水来让脚本解析器和底层C函数进行交互。
@@ -202,7 +202,7 @@ print(example.myadd(4，6))
 import _example
 
 print(_example.myadd(4，6))
-性能对比与方法优劣
+#性能对比与方法优劣
 通过10000000次加法操作比较不同方法的性能，虽然10000000次加法操作很快，很难看出调用C函数对性能带来的提升，但这我们的主要目的是对比不同调用方式在调用共享库时的性能开销。
 
 ctypes
@@ -220,7 +220,7 @@ SWIG
  优势：本质上与Cython类似，都使用了中间语言来生成转换代码。但SWIG能够在他们的接口文件中嵌入C/C++，能够让程序员仔细地调节数据类型的转换过程。在使用上，它比Cython的层次更低，更接近于Python本身提供的API。SWIG能够为多种脚本语言生成转换代码。
 
 劣势：然而这种方案毕竟要学习一种新的语言，当想要仔细地调节类型转换代码的时候，需要学习SWIG/SIP的内部机制，被限定使用特殊的变量名，这使得这种方案的学习曲线相对较高。并且据说SWIG对于C++的支持不好。
-参考资料
+#参考资料
 1、在python里调用C函数的三种方式
 
 https://www.yanxurui.cc/posts/python/2017-06-18-3-ways-of-calling-c-functions-from-python/
